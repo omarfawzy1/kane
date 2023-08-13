@@ -14,10 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnitType.Companion.Sp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import ui.*
@@ -34,17 +36,22 @@ fun App() {
             }
             Row(Modifier.weight(0.9f).padding(10.dp)){
                 Spacer(Modifier.weight(0.5f))
-                Column(Modifier.weight(0.4f)){
-                    Row(Modifier.weight(0.5f)){
-                        WidgetMedium(Modifier.weight(0.5f))
-                        Spacer(Modifier.weight(0.05f))
-                        WidgetMedium(Modifier.weight(0.5f))
-                    }
-                    Row(Modifier.weight(0.5f)){
-                        WidgetMedium(Modifier.weight(0.3f))
-                        Spacer(Modifier.weight(0.3f))
-                        WidgetMedium(Modifier.weight(0.3f))
-                    }
+                Column(Modifier.weight(0.4f), verticalArrangement = Arrangement.SpaceBetween){
+                    DollarWidget(Modifier.weight(0.3f))
+                    Spacer(Modifier.weight(0.2f))
+                    DollarWidget(Modifier.weight(0.3f))
+                    Spacer(Modifier.weight(0.2f))
+                    DollarWidget(Modifier.weight(0.3f))
+//                    Row(Modifier.weight(0.5f)){
+//                        DollarWidget(Modifier.weight(0.5f))
+//                        Spacer(Modifier.weight(0.05f))
+//                        DollarWidget(Modifier.weight(0.5f))
+//                    }
+//                    Row(Modifier.weight(0.5f)){
+//                        DollarWidget(Modifier.weight(0.3f))
+//                        Spacer(Modifier.weight(0.3f))
+//                        DollarWidget(Modifier.weight(0.3f))
+//                    }
                 }
             }
         }
@@ -64,18 +71,40 @@ fun NavBar(){
             Spacer(Modifier.weight(0.1f))
             Text("Help", color = Color.White)
         }
-        Row(Modifier.weight(0.5f)){
-
+        Row(Modifier.weight(0.5f).fillMaxHeight(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically){
+            Spacer(Modifier.weight(1f))
+            Box(Modifier.size(Dp(35f)).clip(RoundedCornerShape(100)).background(Color.White))
+            Spacer(Modifier.weight(0.05f))
         }
 
     }
 }
+
 @Composable
-@Preview
-fun WidgetMedium(modifier: Modifier = Modifier){
-    Row(modifier = modifier.aspectRatio(1.618f).clip(RoundedCornerShape(15.dp)).background(L2).padding(10.dp) ){
-        Column(modifier = Modifier.fillMaxSize()) {
-            Text("Hiiii", color = Color.White, fontSize = 0.7.em)
+fun DollarWidget(modifier: Modifier = Modifier){
+    WidgetMedium(modifier){
+        Row(Modifier){
+            Text("Dollar Price", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Medium, letterSpacing = 1.2.sp)
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+            Text("20.24", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+            Text("20.21",color = Color.Green, fontSize = 9.sp)
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+            Text("Last 7 Days",color = Color.LightGray, fontSize = 7.sp)
+        }
+    }
+}
+
+
+
+@Composable
+fun WidgetMedium(modifier: Modifier = Modifier, content: @Composable() () -> Unit){
+    Row(modifier = modifier.aspectRatio(1.5f).clip(RoundedCornerShape(15.dp)).background(L2).padding(10.dp) ){
+        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceAround) {
+            content()
         }
     }
 }
