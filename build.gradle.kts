@@ -1,4 +1,7 @@
+import org.jetbrains.compose.ComposePlugin.CommonComponentsDependencies.resources
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.distsDirectory
+import org.jetbrains.kotlin.ir.backend.js.compile
 
 plugins {
     kotlin("jvm")
@@ -20,16 +23,28 @@ dependencies {
     // (in a separate module for demo project and in testMain).
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
+    //compile group: 'black.ninia', name: 'jep', version: '3.9.0'
+    implementation(group = "black.ninia", name = "jep", version = "3.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("junit:junit:4.13.1")
+
 }
+
 
 compose.desktop {
     application {
         mainClass = "MainKt"
-
+        jvmArgs.add("-Djava.library.path=app/resources/jep")
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
             packageName = "Kane"
             packageVersion = "1.0.0"
+
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
         }
+
+
+
     }
+
 }

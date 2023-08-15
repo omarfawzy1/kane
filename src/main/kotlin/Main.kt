@@ -22,12 +22,17 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import python_runner.PythonRunner
 import ui.*
+import java.io.File
+
 
 @Composable
 @Preview
 fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
+    //val resourcesDir = File(System.getProperty("compose.application.resources.dir"))
+
+    var text by remember { mutableStateOf("Run Python Code") }
 
     MaterialTheme {
         Column(Modifier.background(L1)) {
@@ -35,25 +40,27 @@ fun App() {
                 NavBar()
             }
             Row(Modifier.weight(0.9f).padding(10.dp)){
-                Spacer(Modifier.weight(0.5f))
+                Column(Modifier.weight(0.6f)) {
+                    Button({
+                        val p = PythonRunner("app/resources/script1.py")
+                        text = p.runCode() as String
+
+                    }){
+                        Text(text)
+                    }
+                }
                 Column(Modifier.weight(0.4f), verticalArrangement = Arrangement.SpaceBetween){
                     DollarWidget(Modifier.weight(0.3f))
                     Spacer(Modifier.weight(0.2f))
                     DollarWidget(Modifier.weight(0.3f))
                     Spacer(Modifier.weight(0.2f))
                     DollarWidget(Modifier.weight(0.3f))
-//                    Row(Modifier.weight(0.5f)){
-//                        DollarWidget(Modifier.weight(0.5f))
-//                        Spacer(Modifier.weight(0.05f))
-//                        DollarWidget(Modifier.weight(0.5f))
-//                    }
-//                    Row(Modifier.weight(0.5f)){
-//                        DollarWidget(Modifier.weight(0.3f))
-//                        Spacer(Modifier.weight(0.3f))
-//                        DollarWidget(Modifier.weight(0.3f))
-//                    }
                 }
             }
+
+
+
+
         }
     }
 }
@@ -108,6 +115,10 @@ fun WidgetMedium(modifier: Modifier = Modifier, content: @Composable() () -> Uni
         }
     }
 }
+
+
+
+
 fun main() = application {
     Window(onCloseRequest = ::exitApplication) {
         App()
