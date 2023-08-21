@@ -20,8 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnitType.Companion.Sp
 import androidx.compose.ui.unit.dp
@@ -30,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.MenuBar
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import code_editor.CodeEditorColorTransformation
 import python_runner.PythonRunner
 import ui.*
 import java.io.File
@@ -51,7 +55,7 @@ fun App() {
 val ROUNDED = RoundedCornerShape(5)
 @Composable
 fun codeEditor(){
-    var txt by rememberSaveable { mutableStateOf("Omar") }
+    var txt by rememberSaveable { mutableStateOf("") }
     var lines by rememberSaveable{ mutableStateOf(5) }
     Column(Modifier.fillMaxSize().clip(ROUNDED).background(Color.Gray)){
         Row(Modifier.weight(0.13f).padding(10.dp).fillMaxSize()) {
@@ -61,21 +65,28 @@ fun codeEditor(){
 //            Column(Modifier.width(20.dp).fillMaxHeight().background(Color.DarkGray)) {
 //                Spacer(Modifier.size(10.dp))
 //            }
-            Column(Modifier.width(30.dp).fillMaxHeight().background(Color.DarkGray)) {
+            Column(Modifier.width(50.dp).fillMaxHeight().background(Color.DarkGray)) {
                 Spacer(Modifier.size(10.dp))
                 for (i in 1..lines){
-                    Row(Modifier.height(IntrinsicSize.Max), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
-                        Spacer(Modifier.size(2.dp))
+                    Row(Modifier.height(17.dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                        Spacer(Modifier.size(4.dp))
                         Box(Modifier.size(12.dp).clip(RoundedCornerShape(100)).background(Color.Red).clickable {  })
-                        Spacer(Modifier.size(2.dp))
-                        Text(i.toString())
+                        Spacer(Modifier.size(4.dp))
+                        Text(i.toString(), color = Color.Gray)
                     }
                 }
 
             }
-            Column {
+            Column(Modifier.padding(start = 5.dp)) {
                 Spacer(Modifier.size(10.dp))
-                BasicTextField(txt, onValueChange = {txt = it}, onTextLayout = {lines = it.lineCount})
+                BasicTextField(txt, modifier = Modifier.fillMaxSize(),
+                    onValueChange = { txt = it},
+                    onTextLayout = {lines = it.lineCount},
+//                    textStyle = TextStyle(lineHeight = 17.sp, color = Color.LightGray),
+                    visualTransformation = CodeEditorColorTransformation()
+                    )
+
+
             }
         }
     }
