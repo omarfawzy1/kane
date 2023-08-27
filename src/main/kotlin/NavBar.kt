@@ -6,10 +6,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.Icons.Rounded
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Notifications
-import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +21,7 @@ fun CodeActionBar(modifier: Modifier){
         Row{
             RunStopButton(CodeStatus.Stopped)
             Spacer(Modifier.size(10.dp))
-            DebugButton(CodeStatus.Stopped)
+            DebugButton(CodeStatus.Debugging)
         }
     }
 }
@@ -37,7 +34,7 @@ fun RunStopButton(status: CodeStatus){
             CodeStatus.Running -> Icon(Rounded.Home,"")
             CodeStatus.Paused -> Icon(Rounded.Add,"")
             CodeStatus.Debugging -> Icon(Rounded.Share,"")
-            CodeStatus.Stopped -> Icon(Rounded.Notifications,"")
+            CodeStatus.Stopped -> Icon(Rounded.AccountBox,"")
         }
 
     }
@@ -51,8 +48,8 @@ fun DebugButton(status: CodeStatus){
         when(status){
             CodeStatus.Running -> Icon(Rounded.Home,"")
             CodeStatus.Paused -> Icon(Rounded.Add,"")
-            CodeStatus.Debugging -> Icon(Rounded.Share,"")
-            CodeStatus.Stopped -> Icon(Rounded.Notifications,"")
+            CodeStatus.Debugging -> Icon(Rounded.Build,"")
+            CodeStatus.Stopped -> Icon(Rounded.PlayArrow,"")
         }
 
     }

@@ -12,37 +12,84 @@ import androidx.compose.ui.text.withStyle
 class CodeEditorColorTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
         return TransformedText(
-            buildAnnotatedStringWithColors(text.toString()),
+            tokenizer(text.toString()),
             OffsetMapping.Identity)
     }
 
-    private fun buildAnnotatedStringWithColors(text:String): AnnotatedString{
-        val words: List<String> = text.split(" ")
-        // splits by whitespace
-        val colors = listOf(Color.Red,Color.Black,Color.Yellow,Color.Blue)
-        var count = 0
-//
-//        val builder = AnnotatedString.Builder()
-//        for (word in words) {
-//            builder.withStyle(style = SpanStyle(color = colors[count%4])) {
-//                append("$word ")
-//            }
-//            count ++
-//        } return builder.toAnnotatedString()
-//
-        return buildAnnotatedString {
-            for (word in words){
-                if (word.isEmpty()) continue
-                withStyle(style = SpanStyle(color = colors[count%4])){
-                    append("$word ")
-                }
-                count++
-            }
+    var keywords = arrayOf(
+        "if",
+        "for",
+        "while",
+        "switch",
+        "case"
+    ).map{
+        it.toRegex()
+    }
+    var built_types = arrayOf(
+        "int\\[?]?".toRegex(),
+        "float\\[?]?".toRegex(),
+        "double\\[?]?".toRegex(),
+        "string\\[?]?".toRegex(),
+        "(unordered_)?map<.*>".toRegex(),
+        "(unordered_)?set<.*>".toRegex(),
+    )
+    var comments = arrayOf("/\\*.*\\*/".toRegex())
 
-            while(this.length < text.length){
-                append(" ")
+    data class Token(
+        val start : Int,
+        val end : Int,
+        val color : Color ,
+        val priority : Int
+    ){
+
+    }
+    private fun tokenizer(code : String): AnnotatedString {
+        val intervals =  ArrayList<Token>()
+        for(regex : Regex in keywords){
+            val matches = regex.findAll(code)
+            for(match in matches){
+                intervals.add(
+                    Token(match.range.first,
+                        match.range.last + 1,
+                        Color.Yellow,
+                        1
+                    )
+                )
             }
         }
-
+        for(regex : Regex in built_types){
+            val matches = regex.findAll(code)
+            for(match in matches){
+                intervals.add(
+                    Token(match.range.first,
+                        match.range.last + 1,
+                        Color.Blue,
+                        2
+                    )
+                )
+            }
+        }
+        for(regex : Regex in comments){
+            val matches = regex.findAll(code)
+            for(match in matches){
+                intervals.add(
+                    Token(match.range.first,
+                        match.range.last + 1,
+                        Color.Gray,
+                        3
+                    )
+                )
+            }
+        }
+        intervals.sortBy { it.priority }
+        return buildAnnotatedString{
+            append(code)
+            intervals.forEach{
+                addStyle(SpanStyle(color = it.color),
+                    it.start,
+                    it.end
+                )
+            }
+        }
     }
 }

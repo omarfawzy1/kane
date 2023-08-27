@@ -14,7 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import code_editor.CodeEditorColorTransformation
@@ -37,8 +39,8 @@ fun App() {
 val ROUNDED = RoundedCornerShape(5)
 @Composable
 fun codeEditor(){
-    var txt by rememberSaveable { mutableStateOf("") }
-    var lines by rememberSaveable{ mutableStateOf(5) }
+    var txt by rememberSaveable { mutableStateOf("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12") }
+    var lines by rememberSaveable{ mutableStateOf(12) }
     Column(Modifier.fillMaxSize().clip(ROUNDED).background(Color.Gray)){
         Row(Modifier.weight(0.13f).padding(10.dp).fillMaxSize()) {
             Text("Practice.cpp")
@@ -64,7 +66,7 @@ fun codeEditor(){
                 BasicTextField(txt, modifier = Modifier.fillMaxSize(),
                     onValueChange = { txt = it},
                     onTextLayout = {lines = it.lineCount},
-//                    textStyle = TextStyle(lineHeight = 17.sp, color = Color.LightGray),
+                    textStyle = TextStyle(lineHeight = 17.sp, color = Color.LightGray),
                     visualTransformation = CodeEditorColorTransformation()
                     )
 
