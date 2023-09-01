@@ -27,8 +27,6 @@ dependencies {
     implementation(group = "black.ninia", name = "jep", version = "3.9.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("junit:junit:4.13.1")
-
-
 }
 
 
@@ -43,9 +41,9 @@ compose.desktop {
 
             appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
         }
-
-
-
     }
+}
 
+kotlin {
+    jvmToolchain(18)
 }
