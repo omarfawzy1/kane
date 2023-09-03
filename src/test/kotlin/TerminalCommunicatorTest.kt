@@ -1,68 +1,77 @@
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.junit.Test
-import kotlin.properties.Delegates
+import terminal.*
+import java.util.logging.Logger
 
 class TerminalCommunicatorTest{
+//    @Test
+//    fun test(){
+//        runBlocking{
+//            val inpt = TerminalInput({})
+//            val output = TerminalOutput()
+//            val terminal = Terminal(inpt, output)
+//
+//            println("Started")
+//
+//
+//            terminal.start()
+//
+//
+//            inpt.add("echo hello")
+//            output.collect{
+//                println(it)
+//            }
+//            //val v = Logger.getLogger("l1")
+//            println("Waiting")
+//            for (i in 1..50) {
+////                v.info("Printing.isWaiting")
+//                output.collect{
+//                    println(it)
+//                }
+//                if (output.queue.isNotEmpty())
+//                    println(output.queue.removeFirstOrNull())
+//                Thread.sleep(1000)
+//            }
+//            println("End")
+//            assert(true)
+//        }
+//    }
+
+//    @Test
+//    fun delgateTest(){
+////        val arr = ObservableArrayList<String>{
+////            println("hello")
+////        }
+////
+////        arr.add("omar")
+////
+////        arr.onChange = {
+////            println("something new")
+////        }
+////
+////        arr.add("is it new")
+//
+//        Thread.sleep(2000)
+//        assert(true)
+//    }
+
+
     @Test
-    fun test(){
-        val inpt = TerminalCommunicator.TerminalInput()
-        val output = TerminalCommunicator.TerminalOutput()
-        val terminal = TerminalCommunicator.Terminal(inpt, output)
+    fun nw(){
         runBlocking {
+            val terminal = Terminal()
             launch {
-                coroutineScope{
-                    println("Started")
-                    terminal.start()
-                }
-            }
-            launch {
-                coroutineScope {
-                    inpt.queue.add("echo hello")
-
-                    println("Waiting")
-                    for (i in 1..50){
-                        if(output.queue.isNotEmpty())
-                            println(output.queue.removeFirstOrNull())
-                        Thread.sleep(1000)
-                    }
-                    println("End")
-                }
+                terminal.getTerminalOutputFlow().collect{ if(it != null) println(it) }
             }
 
 
+            println("Main is Adding Command")
+            terminal.addTerminalCommand("echo hellow")
+            println("Main Thread Continued")
+            delay(10_000)
+
+            terminal.close()
             assert(true)
         }
-
-
-    }
-    class ObservableArrayList<T>(var onChange : () -> Unit) : ArrayList<T>(){
-        override fun add(element: T): Boolean {
-            onChange()
-            return super.add(element)
-        }
-    }
-    @Test
-    fun delgateTest(){
-        val queue : MutableList<String> by Delegates.observable(mutableListOf())
-        { _, _, _ -> println("Something changed") }
-
-        val arr = ObservableArrayList<String>{
-            println("hello")
-        }
-
-        arr.add("omar")
-
-        arr.onChange = {
-            println("something new")
-        }
-
-        arr.add("is it new")
-
-        Thread.sleep(2000)
-        assert(true)
-
     }
 }
